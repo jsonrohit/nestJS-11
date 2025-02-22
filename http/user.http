@@ -3,7 +3,7 @@
 GET {{url}}/user
 Content-Type: application/json
 
-###
+####
 POST {{url}}/user
 Content-Type: application/json
 Accept: application/json
@@ -30,7 +30,7 @@ Accept: application/json
     "createdAt":"22-02-2025"
 }
 
-###
+####
 DELETE {{url}}/user/1
 Content-Type: application/json
 Accept: application/json
