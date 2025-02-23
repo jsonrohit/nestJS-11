@@ -10,8 +10,7 @@ Accept: application/json
 
 {
     "name":"rohit",
-    "email":"r@gmail.com",
-    "createdAt":"22-02-2025"
+    "email":"rr@gmail.com"
 }
 
 ####
