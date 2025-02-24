@@ -15,11 +15,10 @@ export class UserService {
         ...createUserDto,
       },
     });
-    return 'This action adds a new user';
   }
 
   findAll() {
-    return `This action returns all user`;
+    return this.prisma.user.findMany();
   }
 
   findOne(id: number) {
