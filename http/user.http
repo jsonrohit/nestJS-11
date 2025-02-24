@@ -1,8 +1,11 @@
 @url = http://127.0.0.1:8888
 
+# @name userData
 GET {{url}}/user
 Content-Type: application/json
 
+@userId = {{userData.response.body.$[0].id}}
+ 
 ####
 POST {{url}}/user
 Content-Type: application/json
@@ -14,22 +17,21 @@ Accept: application/json
 }
 
 ####
-GET {{url}}/user/1
+GET {{url}}/user/{{userId}}
 Content-Type: application/json
 
 ####
-PATCH {{url}}/user/1
+PATCH {{url}}/user/{{userId}}
 Content-Type: application/json
 Accept: application/json
 
 {
-    "id":1,
     "name":"rohit",
     "email":"r@gmail.com",
     "createdAt":"22-02-2025"
 }
 
 ####
-DELETE {{url}}/user/1
+DELETE {{url}}/user/{{userId}}
 Content-Type: application/json
 Accept: application/json
