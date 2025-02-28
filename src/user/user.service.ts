@@ -5,32 +5,40 @@ import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class UserService {
-  constructor(private prisma: PrismaService){
+    constructor(private prisma: PrismaService) {
 
-  }
-  create(createUserDto: CreateUserDto) {
-    console.log(createUserDto,'createUserDto');
-    return this.prisma.user.create({
-      data: {
-        ...createUserDto,
-      },
-    });
-    return 'This action adds a new user';
-  }
+    }
+    
+    create(createUserDto: CreateUserDto) {
+        console.log(createUserDto, 'createUserDto');
+        return this.prisma.user.create({
+            data: {
+                ...createUserDto,
+            },
+        });
+    }
 
-  findAll() {
-    return `This action returns all user`;
-  }
+    findAll() {
+        return this.prisma.user.findMany();
+    }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
-  }
+    findOne(id: number) {
+        return this.prisma.user.findUnique({
+            where: { id }, // Only works with unique fields
+        });
+    }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
-  }
+    update(id: number, updateUserDto: UpdateUserDto) {
+        this.prisma.user.update({
+            where: { id }, // Ensure the record exists
+            data: updateUserDto,
+        });
+    }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
-  }
+    remove(id: number) {
+        return this.prisma.user.delete({
+            where: { id }
+        });
+    }
+
 }
