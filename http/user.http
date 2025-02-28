@@ -4,7 +4,8 @@
 GET {{url}}/user
 Content-Type: application/json
 
-@userId = {{userData.response.body.$[0].id}}
+###
+@userId = {{userData.response.body.$.id}}
  
 ####
 POST {{url}}/user
