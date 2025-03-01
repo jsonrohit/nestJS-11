@@ -10,7 +10,6 @@ export class UserService {
     }
 
     async create(createUserDto: CreateUserDto) {
-        console.log(createUserDto, 'createUserDto');
         return await this.prisma.user.create({
             data: createUserDto
         });
@@ -22,7 +21,7 @@ export class UserService {
 
     async findOne(id: number) {
         return await this.prisma.user.findUnique({
-            where: { id }, // Only works with unique fields
+            where: { id },
         });
     }
 
