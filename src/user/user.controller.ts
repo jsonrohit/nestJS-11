@@ -10,9 +10,6 @@ export class UserController {
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
     return this.userService.create(createUserDto)
-    let data = this.userService.create(createUserDto)
-    console.log(data,'data controller post');
-    return data;
   }
 
   @Get()
