@@ -8,35 +8,35 @@ export class UserService {
     constructor(private prisma: PrismaService) {
 
     }
-    
-    create(createUserDto: CreateUserDto) {
+
+    async create(createUserDto: CreateUserDto) {
         console.log(createUserDto, 'createUserDto');
-        return this.prisma.user.create({
-            data: {
-                ...createUserDto,
-            },
+        return await this.prisma.user.create({
+            data: createUserDto
         });
     }
 
-    findAll() {
-        return this.prisma.user.findMany();
+    async findAll() {
+        return await this.prisma.user.findMany();
     }
 
-    findOne(id: number) {
-        return this.prisma.user.findUnique({
+    async findOne(id: number) {
+        return await this.prisma.user.findUnique({
             where: { id }, // Only works with unique fields
         });
     }
 
-    update(id: number, updateUserDto: UpdateUserDto) {
-        this.prisma.user.update({
-            where: { id }, // Ensure the record exists
+    async update(id: number, updateUserDto: UpdateUserDto) {
+        const updatedUser = await this.prisma.user.update({
+            where: { id },
             data: updateUserDto,
         });
+
+        return updatedUser;
     }
 
-    remove(id: number) {
-        return this.prisma.user.delete({
+    async remove(id: number) {
+        return await this.prisma.user.delete({
             where: { id }
         });
     }
