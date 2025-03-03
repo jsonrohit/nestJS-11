@@ -1,10 +1,13 @@
 -- CreateTable
-CREATE TABLE `user` (
+CREATE TABLE `users` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(191) NOT NULL,
+    `mobile` VARCHAR(191) NOT NULL,
     `email` VARCHAR(191) NOT NULL,
+    `password` VARCHAR(191) NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
 
-    UNIQUE INDEX `user_email_key`(`email`),
+    UNIQUE INDEX `users_mobile_key`(`mobile`),
+    UNIQUE INDEX `users_email_key`(`email`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;

@@ -7,13 +7,15 @@ import { UserModule } from './user/user.module';
 import { LoggerMiddleware } from './middlewares/logger/logger.middleware';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { PerformanceInterceptor } from './interceptor/performance.interceptor';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true, // Makes the config available globally
     }),
-    UserModule
+    UserModule,
+    AuthModule
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService,
