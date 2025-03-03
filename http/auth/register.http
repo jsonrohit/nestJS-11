@@ -1,24 +1,27 @@
 @url = http://127.0.0.1:8888
 
 ####
+# @name registerData
 POST {{url}}/register
 Content-Type: application/json
 Accept: application/json
 
 {
     "name":"rohit",
-    "mobile":"9937406565",
-    "email":"rrr@gmail.com",
+    "mobile":"9077406565",
+    "email":"ry@gmail.com",
     "password":"test@123"
 }
 
 ###
-# @name registerData
+@registerId = {{registerData.response.body.data.id}}
+
+###
+
 GET {{url}}/register
 Content-Type: application/json
 
-###
-@registerId = {{registerData.response.body.$.[0].id}}
+
 
 ####
 # GET {{url}}/register/{{registerId}}
