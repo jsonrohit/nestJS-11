@@ -1,8 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateRegisterDto } from './register/dto/create-register.dto';
 import { UpdateRegisterDto } from './register/dto/update-register.dto';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService {
@@ -10,14 +11,27 @@ export class AuthService {
 
   }
   async create(createRegisterDto: CreateRegisterDto) {
-    console.log(createRegisterDto,'createRegisterDto');
-    const user =  await this.prisma.users.create({
+    console.log(createRegisterDto, 'createRegisterDto');
+    const user = await this.prisma.users.create({
       data: createRegisterDto
     });
-    console.log(this.generateToken(user),'this.generateToken(user)');
-    user['token'] = this.generateToken(user);
-    console.log(user,'final')
-    return user;
+    return this.generateToken(user);
+  }
+
+  async login(obj: any) {
+    const user = await this.prisma.users.findUnique({
+      where: { email: obj.email },
+    });
+    console.log(user, 'useruseruseruseruser');
+    if (!user) throw new UnauthorizedException('Invalid credentials');
+
+    const isValid = await bcrypt.compare(obj.password, user.password);
+    if (!isValid) throw new UnauthorizedException('Invalid credentials');
+
+    return {
+      user: { ...this.generateToken(user) },
+      message: 'Login successful',
+    }
   }
 
   async findAll() {
@@ -38,6 +52,11 @@ export class AuthService {
 
   generateToken(user) {
     const payload = { sub: user.id, email: user.email };
-    return this.jwtService.sign(payload);
+    delete user.password
+    return {
+      ...user,
+      token: this.jwtService.sign(payload),
+      statusCode: 200,
+    };
   }
 }
