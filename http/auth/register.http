@@ -21,8 +21,6 @@ Accept: application/json
 GET {{url}}/register
 Content-Type: application/json
 
-
-
 ####
 # GET {{url}}/register/{{registerId}}
 # Content-Type: application/json
