@@ -29,7 +29,7 @@ export class RegisterController {
     }
   }
 
-  @Get()
+  @Get('/users')
   async findAll() {
     try {
       return  await this.registerService.findAll();
