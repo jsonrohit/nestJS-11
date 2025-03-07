@@ -32,7 +32,9 @@ export class RegisterController {
   @Get('/users')
   async findAll() {
     try {
-      return  await this.registerService.findAll();
+      const users = await this.registerService.findAll()
+       users.map((user:any) => delete user.password);
+       return users;
     }catch (error) {
       throw new InternalServerErrorException('Something went wrong.');
     }
