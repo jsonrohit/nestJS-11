@@ -35,7 +35,6 @@ GET {{url}}/register/users
 Content-Type: application/json
 Authorization: Bearer {{token}}
 
-
 ####
 # GET {{url}}/register/{{registerId}}
 # Content-Type: application/json
