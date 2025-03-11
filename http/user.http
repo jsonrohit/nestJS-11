@@ -35,3 +35,4 @@ Accept: application/json
 DELETE {{url}}/user/{{userId}}
 Content-Type: application/json
 Accept: application/json
+

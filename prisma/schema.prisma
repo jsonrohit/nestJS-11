@@ -28,3 +28,4 @@ model users {
   password  String
   createdAt DateTime @default(now())
 }
+
