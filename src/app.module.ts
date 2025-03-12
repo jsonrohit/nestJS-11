@@ -9,6 +9,7 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
 import { AuthModule } from './auth/auth.module';
 import { LoggingInterceptor } from './interceptor/logging.interceptor';
 import { JwtMiddleware } from './middleware/jwt/jwt.middleware';
+import { LoginModule } from './ghrapql/auth/login/login.module';
 
 @Module({
   imports: [
@@ -16,7 +17,8 @@ import { JwtMiddleware } from './middleware/jwt/jwt.middleware';
       isGlobal: true, // Makes the config available globally
     }),
     UserModule,
-    AuthModule
+    AuthModule,
+    LoginModule
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService,
@@ -28,16 +30,20 @@ import { JwtMiddleware } from './middleware/jwt/jwt.middleware';
   exports: [PrismaService], // Export PrismaService to use in other modules
 })
 
-export class AppModule implements NestModule {
-  configure(consumer: MiddlewareConsumer) {
-    consumer
-      .apply(LoggerMiddleware, JwtMiddleware)
-      .exclude(
-        '/register',  // Exclude specific route
-        '/login',
-          // Exclude all routes in AuthModule
-      )
-      .forRoutes('*'); // Apply to all routes or specify controllers
-  }
-}
+export class AppModule {}
+
+
+// comment for stop jwt token
+// export class AppModule implements NestModule {
+//   configure(consumer: MiddlewareConsumer) {
+//     consumer
+//       .apply(LoggerMiddleware, JwtMiddleware)
+//       .exclude(
+//         '/register',  // Exclude specific route
+//         '/login',
+//           // Exclude all routes in AuthModule
+//       )
+//       .forRoutes('*'); // Apply to all routes or specify controllers
+//   }
+// }
 
