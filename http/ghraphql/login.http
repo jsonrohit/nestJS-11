@@ -1,0 +1,16 @@
+@url = http://127.0.0.1:8888
+ 
+####
+GET {{url}}
+Content-Type: application/json
+Authorization: Bearer xxx
+X-REQUEST-TYPE: GraphQL
+
+query Login {
+  login {
+    id,
+    body,
+    userId,
+    title
+  }
+}
