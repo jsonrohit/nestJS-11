@@ -10,6 +10,8 @@ import { AuthModule } from './auth/auth.module';
 import { LoggingInterceptor } from './interceptor/logging.interceptor';
 import { JwtMiddleware } from './middleware/jwt/jwt.middleware';
 import { LoginModule } from './ghrapql/auth/login/login.module';
+import { GraphQLModule } from '@nestjs/graphql';
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 
 @Module({
   imports: [
@@ -18,7 +20,8 @@ import { LoginModule } from './ghrapql/auth/login/login.module';
     }),
     UserModule,
     AuthModule,
-    LoginModule
+    LoginModule,
+   
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService,
