@@ -1,1 +1,11 @@
-export class CreateLoginInput {}
+import { IsEmail, IsNotEmpty, IsString } from "class-validator";
+
+export class CreateLoginInput {
+    @IsEmail()
+    @IsNotEmpty()
+    email: string;
+
+    @IsString()
+    @IsNotEmpty()
+    password: string;
+}
