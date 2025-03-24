@@ -1,13 +1,15 @@
-@url = http://127.0.0.1:8888
+@url = http://localhost:8888/graphql
  
 ####
-GET {{url}}
+POST {{url}}
 Content-Type: application/json
 Authorization: Bearer xxx
 X-REQUEST-TYPE: GraphQL
 
-query User {
+query {
   users {
     id
+    name,
+    email
   }
 }
