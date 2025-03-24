@@ -9,19 +9,21 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
 import { AuthModule } from './auth/auth.module';
 import { LoggingInterceptor } from './interceptor/logging.interceptor';
 import { JwtMiddleware } from './middleware/jwt/jwt.middleware';
-import { LoginModule } from './ghrapql/auth/login/login.module';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
-
+import { UsersModule } from './ghrapql/auth/users/users.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true, // Makes the config available globally
     }),
+    GraphQLModule.forRoot<ApolloDriverConfig>({
+      driver: ApolloDriver,
+      typePaths: ['./**/*.graphql'], // Load schema from .graphql files
+    }),
     UserModule,
     AuthModule,
-    LoginModule,
-   
+    UsersModule
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService,
