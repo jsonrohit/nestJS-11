@@ -20,6 +20,10 @@ import { UsersModule } from './ghrapql/auth/users/users.module';
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       typePaths: ['./**/*.graphql'], // Load schema from .graphql files
+      //  driver: ApolloDriver,
+      // autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
+      sortSchema: true,
+      playground: true,
     }),
     UserModule,
     AuthModule,

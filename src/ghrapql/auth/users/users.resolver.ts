@@ -14,6 +14,7 @@ export class UsersResolver {
 
   @Query('users')
   findAll() {
+    console.log('usersusersusers');
     return this.usersService.findAll();
   }
 

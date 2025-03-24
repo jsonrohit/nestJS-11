@@ -1,6 +1,8 @@
 type User {
   # Example field (placeholder)
-  id: Int
+  id: Int!
+  name: String!
+  email: String!
 }
 
 input CreateUserInput {
@@ -13,7 +15,7 @@ input UpdateUserInput {
 }
 
 type Query {
-  users: [User]!
+  users: [User!]!
   user(id: Int!): User
 }
 
