@@ -10,7 +10,8 @@ export class UsersService {
 
   }
   create(createUserInput: CreateUserInput) {
-    return 'This action adds a new user';
+    console.log(createUserInput,'createUserInput');
+    // return this.prisma.users.create({createUserInput});
   }
 
   async findAll() {
@@ -18,8 +19,11 @@ export class UsersService {
       return await this.prisma.users.findMany();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  async findOne(id: number) {
+    // return `This action returns a #${id} user`;
+    return await this.prisma.users.findUnique({
+      where: { id },
+    });
   }
 
   update(id: number, updateUserInput: UpdateUserInput) {
