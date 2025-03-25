@@ -31,17 +31,53 @@ query {
 
 #### user create ######## Create User (Raw GraphQL)
 POST {{url}}
-# Content-Type: application/graphql
 Content-Type: application/json
 Authorization: Bearer xxx
 X-REQUEST-TYPE: GraphQL
 
 mutation {
-  createUser(input: {
+  createUser(createUserInput: {
     name: "John Doe",
     email: "user@example.com",
-    mobile: "9917404040"
+    mobile: "9917404040",
+     password: "test@123"
   }) {
+    id
+    email
+    name
+  }
+}
+
+
+#### user update ########
+POST {{url}}
+Content-Type: application/json
+Authorization: Bearer xxx
+X-REQUEST-TYPE: GraphQL
+
+mutation {
+  updateUser(updateUserInput: {
+    id : 15,
+    name: "John Doe",
+    email: "user@example.com",
+    mobile: "9917404040",
+    password: "test@123"
+  }) {
+    id
+    email
+    name
+  }
+}
+
+
+#### delete user ########
+POST {{url}}
+Content-Type: application/json
+Authorization: Bearer xxx
+X-REQUEST-TYPE: GraphQL
+
+mutation {
+  removeUser(id:30) {
     id
     email
     name
