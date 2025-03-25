@@ -1,6 +1,6 @@
 @url = http://localhost:8888/graphql
  
-####
+#### get all users list #####
 POST {{url}}
 Content-Type: application/json
 Authorization: Bearer xxx
@@ -11,5 +11,75 @@ query {
     id
     name,
     email
+  }
+}
+
+
+#### user view #####
+POST {{url}}
+Content-Type: application/json
+Authorization: Bearer xxx
+X-REQUEST-TYPE: GraphQL
+
+query {
+  user(id:15) {
+    id
+    name,
+    email
+  }
+}
+
+#### user create ######## Create User (Raw GraphQL)
+POST {{url}}
+Content-Type: application/json
+Authorization: Bearer xxx
+X-REQUEST-TYPE: GraphQL
+
+mutation {
+  createUser(createUserInput: {
+    name: "John Doe",
+    email: "user@example.com",
+    mobile: "9917404040",
+     password: "test@123"
+  }) {
+    id
+    email
+    name
+  }
+}
+
+
+#### user update ########
+POST {{url}}
+Content-Type: application/json
+Authorization: Bearer xxx
+X-REQUEST-TYPE: GraphQL
+
+mutation {
+  updateUser(updateUserInput: {
+    id : 15,
+    name: "John Doe",
+    email: "user@example.com",
+    mobile: "9917404040",
+    password: "test@123"
+  }) {
+    id
+    email
+    name
+  }
+}
+
+
+#### delete user ########
+POST {{url}}
+Content-Type: application/json
+Authorization: Bearer xxx
+X-REQUEST-TYPE: GraphQL
+
+mutation {
+  removeUser(id:30) {
+    id
+    email
+    name
   }
 }

@@ -3,15 +3,23 @@ type User {
   id: Int!
   name: String!
   email: String!
+  mobile: String!
 }
 
 input CreateUserInput {
   # Example field (placeholder)
-  id: Int
+  name: String!
+  email: String!
+  mobile: String!
+  password: String!
 }
 
 input UpdateUserInput {
   id: Int!
+  name: String!
+  email: String!
+  mobile: String!
+  password: String!
 }
 
 type Query {

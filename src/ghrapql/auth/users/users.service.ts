@@ -10,7 +10,8 @@ export class UsersService {
 
   }
   create(createUserInput: CreateUserInput) {
-    return 'This action adds a new user';
+    console.log(createUserInput,'---createUserInput');
+    return this.prisma.users.create({data:createUserInput});
   }
 
   async findAll() {
@@ -18,15 +19,27 @@ export class UsersService {
       return await this.prisma.users.findMany();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  async findOne(id: number) {
+    // return `This action returns a #${id} user`;
+    return await this.prisma.users.findUnique({
+      where: { id },
+    });
   }
 
-  update(id: number, updateUserInput: UpdateUserInput) {
-    return `This action updates a #${id} user`;
+  async update(id: number, updateUserInput: UpdateUserInput) {
+    console.log(updateUserInput,'id',id);
+    const updatedUser = await this.prisma.users.update({
+      where: { id },
+      data: updateUserInput,
+  });
+
+  return updatedUser;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+ async remove(id: number) {
+    console.log('fff');
+    return await this.prisma.users.delete({
+      where: { id }
+  });
   }
 }
