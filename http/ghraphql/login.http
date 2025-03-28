@@ -9,7 +9,7 @@ X-REQUEST-TYPE: GraphQL
 query {
   users {
     id
-    name,
+    name
     email
   }
 }
@@ -60,7 +60,7 @@ mutation {
     id : 15,
     name: "John Doe",
     email: "user@example.com",
-    mobile: "9917404040",
+    mobile: "991740400",
     password: "test@123"
   }) {
     id
