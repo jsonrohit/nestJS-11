@@ -13,18 +13,45 @@ generator client {
   provider = "prisma-client-js"
 }
 
-// model user {
-//   id        Int     @id @default(autoincrement())
-//   name      String
-//   email     String  @unique
-//   createdAt DateTime @default(now())
-// }
-
-model users {
-  id        Int     @id @default(autoincrement())
-  name      String
-  mobile    String  @unique
-  email     String  @unique
-  password  String
+model Tenant {
+  id      Int     @id @default(autoincrement())
+  name    String
+  users   User[]
   createdAt DateTime @default(now())
+
+  @@map("tenants")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  name      String
+  password  String
+  tenantId  Int
+  tenant    Tenant   @relation(fields: [tenantId], references: [id])
+  roles     UserRole[]
+  createdAt DateTime @default(now())
+
+  @@map("users")
+}
+
+model Role {
+  id    Int    @id @default(autoincrement())
+  name  String @unique
+  users UserRole[]
+
+  @@map("roles")
+}
+
+model UserRole {
+  id     Int  @id @default(autoincrement())
+  user_id Int
+  role_id Int
+
+  user   User @relation(fields: [user_id], references: [id])
+  role   Role @relation(fields: [role_id], references: [id])
+
+  @@unique([user_id, role_id]) // A user can have a role only once
+
+  @@map("users_roles")
 }
