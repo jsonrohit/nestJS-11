@@ -1,0 +1,25 @@
+type Tenant {
+  id: Int!
+  name: String!
+  createdAt: String
+}
+
+input CreateTenantInput {
+  name: String!
+}
+
+input UpdateTenantInput {
+  id: Int!
+  name: String!
+}
+
+type Query {
+  tenants: [Tenant]!
+  tenant(id: Int!): Tenant
+}
+
+type Mutation {
+  createTenant(createTenantInput: CreateTenantInput!): Tenant!
+  updateTenant(updateTenantInput: UpdateTenantInput!): Tenant!
+  removeTenant(id: Int!): Tenant
+}

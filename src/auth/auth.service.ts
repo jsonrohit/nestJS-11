@@ -12,14 +12,14 @@ export class AuthService {
   }
   async create(createRegisterDto: CreateRegisterDto) {
     console.log(createRegisterDto, 'createRegisterDto');
-    const user = await this.prisma.users.create({
+    const user = await this.prisma.user.create({
       data: createRegisterDto
     });
     return this.generateToken(user);
   }
 
   async login(obj: any) {
-    const user = await this.prisma.users.findUnique({
+    const user = await this.prisma.user.findUnique({
       where: { email: obj.email },
     });
     console.log(user, 'useruseruseruseruser');
@@ -35,7 +35,7 @@ export class AuthService {
   }
 
   async findAll() {
-    return await this.prisma.users.findMany();
+    return await this.prisma.user.findMany();
   }
 
   findOne(id: number) {

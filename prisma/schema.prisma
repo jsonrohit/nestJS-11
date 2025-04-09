@@ -24,8 +24,9 @@ model Tenant {
 
 model User {
   id        Int      @id @default(autoincrement())
-  email     String   @unique
   name      String
+  email     String   @unique
+  mobile    Int?      @unique 
   password  String
   tenantId  Int
   tenant    Tenant   @relation(fields: [tenantId], references: [id])

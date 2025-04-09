@@ -18,7 +18,7 @@ export class JwtMiddleware implements NestMiddleware {
 
       const decoded: any = jwt.verify(token, secret);
 
-      const user = await this.prisma.users.findUnique({
+      const user = await this.prisma.user.findUnique({
         where: { id: decoded.sub },
         select: { id: true, email: true, name: true },
       });

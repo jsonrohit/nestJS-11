@@ -9,9 +9,11 @@ export class CreateUserInput {
     @IsNotEmpty()
     email: string;
 
-    @IsNumber()
     @IsNotEmpty()
-    mobile: string;
+    mobile: number;
+
+    @IsNotEmpty()
+    tenantId: number;
 
     @IsNotEmpty()
     password: string;
