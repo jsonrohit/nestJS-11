@@ -11,7 +11,10 @@ export class CreateRegisterDto {
 
     @IsNumber()
     @IsNotEmpty()
-    mobile: string;
+    mobile: number;
+
+    @IsNotEmpty()
+    tenantId: number;
 
     @IsNotEmpty()
     password: string;

@@ -9,37 +9,40 @@ export class UsersService {
   constructor(private prisma: PrismaService) {
 
   }
+
   create(createUserInput: CreateUserInput) {
-    console.log(createUserInput,'---createUserInput');
-    return this.prisma.users.create({data:createUserInput});
+    console.log(createUserInput, '---createUserInput');
+    return this.prisma.user.create({
+      data: createUserInput
+    });
   }
 
   async findAll() {
     console.log('This action returns all users');
-      return await this.prisma.users.findMany();
+    return await this.prisma.user.findMany();
   }
 
   async findOne(id: number) {
     // return `This action returns a #${id} user`;
-    return await this.prisma.users.findUnique({
+    return await this.prisma.user.findUnique({
       where: { id },
     });
   }
 
   async update(id: number, updateUserInput: UpdateUserInput) {
-    console.log(updateUserInput,'id',id);
-    const updatedUser = await this.prisma.users.update({
+    console.log(updateUserInput, 'id', id);
+    const updatedUser = await this.prisma.user.update({
       where: { id },
       data: updateUserInput,
-  });
+    });
 
-  return updatedUser;
+    return updatedUser;
   }
 
- async remove(id: number) {
+  async remove(id: number) {
     console.log('fff');
-    return await this.prisma.users.delete({
+    return await this.prisma.user.delete({
       where: { id }
-  });
+    });
   }
 }

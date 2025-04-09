@@ -9,6 +9,11 @@ export class CreateUserDto {
     @IsNotEmpty()
     email: string;
 
-    mobile: string;
+    @IsNotEmpty()
+    mobile: number;
+
+    @IsNotEmpty()
+    tenantId: number;
+    
     password: string;
 }

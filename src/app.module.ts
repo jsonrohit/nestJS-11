@@ -11,7 +11,8 @@ import { LoggingInterceptor } from './interceptor/logging.interceptor';
 import { JwtMiddleware } from './middleware/jwt/jwt.middleware';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
-import { UsersModule } from './ghrapql/auth/users/users.module';
+import { UsersModule } from './ghraphql/auth/users/users.module';
+import { TenantModule } from './ghraphql/tenant/tenant.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -27,7 +28,8 @@ import { UsersModule } from './ghrapql/auth/users/users.module';
     }),
     UserModule,
     AuthModule,
-    UsersModule
+    UsersModule,
+    TenantModule
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService,

@@ -7,10 +7,9 @@ type User {
 }
 
 input CreateUserInput {
-  # Example field (placeholder)
   name: String!
   email: String!
-  mobile: String!
+  mobile: Int!
   password: String!
 }
 
@@ -18,8 +17,8 @@ input UpdateUserInput {
   id: Int!
   name: String!
   email: String!
-  mobile: String!
-  password: String!
+  mobile: Int!
+  password: String
 }
 
 type Query {

@@ -1,89 +1,75 @@
 @url = http://localhost:8888/graphql
+
+
+#### create tenant ########
+POST {{url}}
+Content-Type: application/json
+Authorization: Bearer xxx
+X-REQUEST-TYPE: GraphQL
+
+mutation {
+  createTenant(createTenantInput: {
+    name: "Tenant 1",
+  }) {
+    id
+  }
+}
+
  
-#### get all users list #####
+#### get all tenant list #####
 POST {{url}}
 Content-Type: application/json
 Authorization: Bearer xxx
 X-REQUEST-TYPE: GraphQL
 
 query {
-  users {
+  tenant {
     id
     name
-    email
-    createdAt
   }
 }
 
 
-#### user view #####
+#### tenant view #####
 POST {{url}}
 Content-Type: application/json
 Authorization: Bearer xxx
 X-REQUEST-TYPE: GraphQL
 
 query {
-  user(id:15) {
+  tenant(id:15) {
     id
     name
-    email
-    createdAt
   }
 }
 
-#### user create ######## Create User (Raw GraphQL)
+
+#### tenant update ########
 POST {{url}}
 Content-Type: application/json
 Authorization: Bearer xxx
 X-REQUEST-TYPE: GraphQL
 
 mutation {
-  createUser(createUserInput: {
-    name: "John Doe",
-    email: "user@example.com",
-    mobile: 9917404040,
-     password: "test@123"
-  }) {
-    id
-    name
-    email
-    createdAt
-  }
-}
-
-
-#### user update ########
-POST {{url}}
-Content-Type: application/json
-Authorization: Bearer xxx
-X-REQUEST-TYPE: GraphQL
-
-mutation {
-  updateUser(updateUserInput: {
+  updateTenant(updateTenantInput: {
     id : 15,
-    name: "John Doe",
-    email: "user@example.com",
-    mobile: "991740400",
-    password: "test@123"
+    name: "Upds tentant"
   }) {
     id
     name
-    email
-    createdAt
   }
 }
 
-#### delete user ########
+
+#### delete tenant ########
 POST {{url}}
 Content-Type: application/json
 Authorization: Bearer xxx
 X-REQUEST-TYPE: GraphQL
 
 mutation {
-  removeUser(id:30) {
+  removeTenant(id:30) {
     id
     name
-    email
-    createdAt
   }
 }
