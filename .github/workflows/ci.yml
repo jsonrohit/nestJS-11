@@ -1,0 +1,66 @@
+name: CI
+
+on:
+  push:
+    branches: [master, dev]
+  pull_request:
+    branches: [master, dev]
+
+jobs:
+  lint-and-test:
+    name: Lint & Test
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: rootpass
+          MYSQL_DATABASE: nestjs_test
+          MYSQL_USER: nestuser
+          MYSQL_PASSWORD: nestpass
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h localhost"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate Prisma client
+        run: npx prisma generate
+
+      - name: Run Prisma migrations
+        run: npx prisma migrate deploy
+        env:
+          DATABASE_URL: mysql://nestuser:nestpass@localhost:3306/nestjs_test
+
+      - name: Lint
+        run: npm run lint
+
+      # - name: Run unit tests
+      #   run: npm run test -- --passWithNoTests
+      #   env:
+      #     DATABASE_URL: mysql://nestuser:nestpass@localhost:3306/nestjs_test
+      #     JWT_SECRET: ci-test-secret
+      #     JWT_EXPIRATION: 3600s
+
+      - name: Build
+        run: npm run build
+        env:
+          DATABASE_URL: mysql://nestuser:nestpass@localhost:3306/nestjs_test
+          JWT_SECRET: ci-test-secret
+          JWT_EXPIRATION: 3600s
