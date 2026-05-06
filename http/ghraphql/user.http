@@ -1,0 +1,81 @@
+@url = http://127.0.0.1:8888/graphql
+
+# @name userData
+#### Fetch all users
+POST {{url}}
+Content-Type: application/json
+Accept: application/json
+X-REQUEST-TYPE: GraphQL
+
+query {
+    id
+    name
+    email
+    tenentId
+    createdAt
+}
+
+###
+@userId = {{userData.response.body.$.[0].id}}
+
+##### create user
+POST {{url}}
+Content-Type: application/json
+Authorization: Bearer xxx
+X-REQUEST-TYPE: GraphQL
+
+mutation {
+    user(createUserInput:{
+        name: "Rohit",
+        email: "rohit@gmail.com",
+        password: "test@123"
+        tenantId: 1
+    }){
+        id
+        name
+        email
+        tenentId
+        createdAt
+    }
+}
+
+
+#### update user
+POST {{url}}
+Content-Type: application/json
+Authorization: Bearer xxx
+X-REQUEST-TYPE: GraphQL
+
+mutation {
+    user(updateUserInput:{
+        id:1,
+        name:"Rohit upds",
+        email:"rohit@gmail.com",
+        password:"test@123"
+        tenantId:1
+    }){
+        id
+        name
+        email
+        tenentId
+        createdAt
+    }
+}
+
+
+#### delete user
+
+POST {{url}}
+Content-Type: application/json
+Authorization: Bearer xxx
+X-REQUEST-TYPE: GraphQL
+
+mutation {
+    user(id:1){
+        id
+        name
+        email
+        tenentId
+        createdAt
+    }
+}

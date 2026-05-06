@@ -1,0 +1,38 @@
+@url = http://127.0.0.1:8888
+
+# @name userData
+GET {{url}}/user
+Content-Type: application/json
+
+###
+@userId = {{userData.response.body.$.[0].id}}
+ 
+####
+POST {{url}}/user
+Content-Type: application/json
+Accept: application/json
+
+{
+    "name":"rohit",
+    "email":"rr1@gmail.com"
+}
+
+####
+GET {{url}}/user/{{userId}}
+Content-Type: application/json
+
+####
+PATCH {{url}}/user/{{userId}}
+Content-Type: application/json
+Accept: application/json
+
+{
+    "name":"rohit singh",
+    "email":"r@gmail.com"
+}
+
+####
+DELETE {{url}}/user/{{userId}}
+Content-Type: application/json
+Accept: application/json
+

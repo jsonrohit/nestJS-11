@@ -1,0 +1,44 @@
+version: '3.9'
+
+services:
+  db:
+    image: mysql:8.0
+    container_name: nestjs_db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-rootpass}
+      MYSQL_DATABASE: ${DB_NAME:-nestjs}
+      MYSQL_USER: ${DB_USER:-nestuser}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-nestpass}
+    ports:
+      - '3306:3306'
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ['CMD', 'mysqladmin', 'ping', '-h', 'localhost']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    container_name: nestjs_app
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      PORT: 8888
+      DATABASE_URL: mysql://${DB_USER:-nestuser}:${DB_PASSWORD:-nestpass}@db:3306/${DB_NAME:-nestjs}
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_EXPIRATION: ${JWT_EXPIRATION:-3600s}
+    ports:
+      - '${APP_PORT:-8888}:8888'
+    volumes:
+      - ./prisma:/app/prisma
+
+volumes:
+  mysql_data:

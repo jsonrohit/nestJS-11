@@ -1,0 +1,75 @@
+@url = http://localhost:8888/graphql
+
+
+#### create tenant ########
+POST {{url}}
+Content-Type: application/json
+Authorization: Bearer xxx
+X-REQUEST-TYPE: GraphQL
+
+mutation {
+  createTenant(createTenantInput: {
+    name: "Tenant 1",
+  }) {
+    id
+  }
+}
+
+ 
+#### get all tenant list #####
+POST {{url}}
+Content-Type: application/json
+Authorization: Bearer xxx
+X-REQUEST-TYPE: GraphQL
+
+query {
+  tenant {
+    id
+    name
+  }
+}
+
+
+#### tenant view #####
+POST {{url}}
+Content-Type: application/json
+Authorization: Bearer xxx
+X-REQUEST-TYPE: GraphQL
+
+query {
+  tenant(id:15) {
+    id
+    name
+  }
+}
+
+
+#### tenant update ########
+POST {{url}}
+Content-Type: application/json
+Authorization: Bearer xxx
+X-REQUEST-TYPE: GraphQL
+
+mutation {
+  updateTenant(updateTenantInput: {
+    id : 15,
+    name: "Upds tentant"
+  }) {
+    id
+    name
+  }
+}
+
+
+#### delete tenant ########
+POST {{url}}
+Content-Type: application/json
+Authorization: Bearer xxx
+X-REQUEST-TYPE: GraphQL
+
+mutation {
+  removeTenant(id:30) {
+    id
+    name
+  }
+}

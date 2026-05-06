@@ -1,0 +1,55 @@
+@url = http://127.0.0.1:8888
+
+#### Register #####
+# @name registerData
+POST {{url}}/register
+Content-Type: application/json
+Accept: application/json
+
+{
+    "name":"rohit",
+    "mobile":"9177406565",
+    "email":"ry@gmail.com",
+    "password":"test@123"
+}
+
+###
+@registerId = {{registerData.response.body.data.id}}
+
+#### Login #####
+# @name loginUser
+POST {{url}}/login
+Content-Type: application/json
+Accept: application/json
+
+{
+    "email":"rrr@gmail.com",
+    "password":"test@123"
+}
+
+###
+@token = {{loginUser.response.body.user.token}}
+
+###
+GET {{url}}/register/users
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+####
+# GET {{url}}/register/{{registerId}}
+# Content-Type: application/json
+
+# ####
+# PATCH {{url}}/register/{{registerId}}
+# Content-Type: application/json
+# Accept: application/json
+
+# {
+#     "name":"rohit singh",
+#     "email":"r@gmail.com"
+# }
+
+####
+# DELETE {{url}}/register/{{registerId}}
+# Content-Type: application/json
+# Accept: application/json
