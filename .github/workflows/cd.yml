@@ -56,9 +56,15 @@ jobs:
           key: ${{ secrets.DEPLOY_SSH_KEY }}
           port: 22
           script: |
-            cd ${{ secrets.DEPLOY_PATH }}
+            DEPLOY_DIR=${{ secrets.DEPLOY_PATH }}
 
-            git pull origin master
+            # Clone repo if not already cloned, otherwise pull latest
+            if [ ! -d "$DEPLOY_DIR/.git" ]; then
+              sudo git clone https://github.com/${{ github.repository }}.git $DEPLOY_DIR
+            fi
+
+            cd $DEPLOY_DIR
+            sudo git pull origin master
 
             IMAGE_NAME=$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
 
@@ -66,11 +72,20 @@ jobs:
 
             sudo docker pull ghcr.io/${IMAGE_NAME}:latest
 
-            sudo docker compose up -d --pull never --no-build
+            # Check which compose command is available
+            if command -v docker-compose &> /dev/null; then
+              sudo docker-compose up -d --no-build
+            elif sudo docker compose version &> /dev/null; then
+              sudo docker compose up -d --no-build
+            else
+              echo "ERROR: Neither docker-compose nor docker compose plugin found. Installing..."
+              sudo apt-get update && sudo apt-get install -y docker-compose-plugin
+              sudo docker compose up -d --no-build
+            fi
 
             sudo docker image prune -f
 
-            sleep 10
+            sleep 15
 
             echo "=== All containers (including stopped) ==="
             sudo docker ps -a --format "table {{.Names}}\t{{.Image}}\t{{.Status}}\t{{.Ports}}"
