@@ -49,11 +49,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Check secrets are set
-        run: |
-          if [ -z "${{ secrets.DEPLOY_HOST }}" ]; then echo "ERROR: DEPLOY_HOST is empty!"; exit 1; fi
-          echo "DEPLOY_HOST is set"
-
       - uses: appleboy/ssh-action@v1
         with:
           host: ${{ secrets.DEPLOY_HOST }}
@@ -74,3 +69,7 @@ jobs:
             sudo docker compose up -d --no-deps --pull always app
 
             sudo docker image prune -f
+
+            echo "=== Running containers ==="
+            sudo docker ps --format "table {{.Names}}\t{{.Image}}\t{{.Status}}\t{{.Ports}}"
+            echo "=== Deploy complete ==="
