@@ -1,4 +1,0 @@
-services:
-  app:
-    build: !reset null
-    image: ghcr.io/jsonrohit/nestjs-11:latest

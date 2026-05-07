@@ -66,10 +66,19 @@ jobs:
 
             sudo docker pull ghcr.io/${IMAGE_NAME}:latest
 
-            sudo docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+            sudo docker compose up -d --pull never --no-build
 
             sudo docker image prune -f
 
-            echo "=== Running containers ==="
-            sudo docker ps --format "table {{.Names}}\t{{.Image}}\t{{.Status}}\t{{.Ports}}"
+            sleep 10
+
+            echo "=== All containers (including stopped) ==="
+            sudo docker ps -a --format "table {{.Names}}\t{{.Image}}\t{{.Status}}\t{{.Ports}}"
+
+            echo "=== App logs ==="
+            sudo docker logs nestjs_app --tail 30 2>&1 || echo "No app container found"
+
+            echo "=== DB logs ==="
+            sudo docker logs nestjs_db --tail 15 2>&1 || echo "No db container found"
+
             echo "=== Deploy complete ==="

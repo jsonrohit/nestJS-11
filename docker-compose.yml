@@ -21,6 +21,7 @@ services:
       retries: 5
 
   app:
+    image: ghcr.io/jsonrohit/nestjs-11:latest
     build:
       context: .
       dockerfile: Dockerfile
