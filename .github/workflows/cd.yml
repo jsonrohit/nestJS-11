@@ -56,44 +56,64 @@ jobs:
           key: ${{ secrets.DEPLOY_SSH_KEY }}
           port: 22
           script: |
-            DEPLOY_DIR=${{ secrets.DEPLOY_PATH }}
-
-            # Clone repo if not already cloned, otherwise pull latest
-            if [ ! -d "$DEPLOY_DIR/.git" ]; then
-              sudo git clone https://github.com/${{ github.repository }}.git $DEPLOY_DIR
-            fi
-
-            cd $DEPLOY_DIR
-            sudo git pull origin master
-
             IMAGE_NAME=$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
 
             echo ${{ secrets.GHCR_TOKEN }} | sudo docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
             sudo docker pull ghcr.io/${IMAGE_NAME}:latest
 
-            # Check which compose command is available
-            if command -v docker-compose &> /dev/null; then
-              sudo docker-compose up -d --no-build
-            elif sudo docker compose version &> /dev/null; then
-              sudo docker compose up -d --no-build
-            else
-              echo "ERROR: Neither docker-compose nor docker compose plugin found. Installing..."
-              sudo apt-get update && sudo apt-get install -y docker-compose-plugin
-              sudo docker compose up -d --no-build
+            # Create network if it doesn't exist
+            sudo docker network create nestjs-net 2>/dev/null || true
+
+            # Stop and remove old containers if they exist
+            sudo docker rm -f nestjs_app 2>/dev/null || true
+            sudo docker rm -f nestjs_db 2>/dev/null || true
+
+            # Start MySQL (skip if already running)
+            if ! sudo docker ps --format '{{.Names}}' | grep -q '^nestjs_db$'; then
+              sudo docker run -d \
+                --name nestjs_db \
+                --network nestjs-net \
+                --restart unless-stopped \
+                -e MYSQL_ROOT_PASSWORD=rootpass \
+                -e MYSQL_DATABASE=nestjs \
+                -e MYSQL_USER=nestuser \
+                -e MYSQL_PASSWORD=nestpass \
+                -p 3306:3306 \
+                -v mysql_data:/var/lib/mysql \
+                mysql:8.0
             fi
+
+            echo "Waiting for MySQL to be ready..."
+            for i in $(seq 1 30); do
+              if sudo docker exec nestjs_db mysqladmin ping -h localhost --silent 2>/dev/null; then
+                echo "MySQL is ready!"
+                break
+              fi
+              echo "Waiting... ($i/30)"
+              sleep 3
+            done
+
+            # Start the NestJS app
+            sudo docker run -d \
+              --name nestjs_app \
+              --network nestjs-net \
+              --restart unless-stopped \
+              -e PORT=8888 \
+              -e DATABASE_URL="mysql://nestuser:nestpass@nestjs_db:3306/nestjs" \
+              -e JWT_SECRET="${{ secrets.JWT_SECRET }}" \
+              -e JWT_EXPIRATION=3600s \
+              -p 8888:8888 \
+              ghcr.io/${IMAGE_NAME}:latest
 
             sudo docker image prune -f
 
-            sleep 15
+            sleep 5
 
-            echo "=== All containers (including stopped) ==="
-            sudo docker ps -a --format "table {{.Names}}\t{{.Image}}\t{{.Status}}\t{{.Ports}}"
+            echo "=== Running containers ==="
+            sudo docker ps --format "table {{.Names}}\t{{.Image}}\t{{.Status}}\t{{.Ports}}"
 
             echo "=== App logs ==="
-            sudo docker logs nestjs_app --tail 30 2>&1 || echo "No app container found"
-
-            echo "=== DB logs ==="
-            sudo docker logs nestjs_db --tail 15 2>&1 || echo "No db container found"
+            sudo docker logs nestjs_app --tail 30 2>&1
 
             echo "=== Deploy complete ==="
