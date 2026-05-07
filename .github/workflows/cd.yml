@@ -68,6 +68,7 @@ jobs:
             # Stop and remove old containers if they exist
             sudo docker rm -f nestjs_app 2>/dev/null || true
             sudo docker rm -f nestjs_db 2>/dev/null || true
+            sudo docker rm -f phpmyadmin 2>/dev/null || true
 
             # Start MySQL (skip if already running)
             if ! sudo docker ps --format '{{.Names}}' | grep -q '^nestjs_db$'; then
@@ -75,24 +76,36 @@ jobs:
                 --name nestjs_db \
                 --network nestjs-net \
                 --restart unless-stopped \
-                -e MYSQL_ROOT_PASSWORD=rootpass \
-                -e MYSQL_DATABASE=nestjs \
-                -e MYSQL_USER=nestuser \
-                -e MYSQL_PASSWORD=nestpass \
+                -e MYSQL_ROOT_PASSWORD=${{ secrets.DB_ROOT_PASSWORD }} \
+                -e MYSQL_DATABASE=${{ secrets.DB_NAME }} \
+                -e MYSQL_USER=${{ secrets.DB_USER }} \
+                -e MYSQL_PASSWORD=${{ secrets.DB_PASSWORD }} \
                 -p 3306:3306 \
                 -v mysql_data:/var/lib/mysql \
                 mysql:8.0
             fi
 
             echo "Waiting for MySQL to be ready..."
-            for i in $(seq 1 30); do
+            for i in $(seq 1 60); do
               if sudo docker exec nestjs_db mysqladmin ping -h localhost --silent 2>/dev/null; then
+                echo "MySQL is accepting connections, waiting a bit more for full init..."
+                sleep 10
                 echo "MySQL is ready!"
                 break
               fi
-              echo "Waiting... ($i/30)"
+              echo "Waiting... ($i/60)"
               sleep 3
             done
+
+            # Start phpMyAdmin
+            sudo docker run -d \
+              --name phpmyadmin \
+              --network nestjs-net \
+              --restart unless-stopped \
+              -e PMA_HOST=nestjs_db \
+              -e PMA_PORT=3306 \
+              -p 8080:80 \
+              phpmyadmin/phpmyadmin
 
             # Start the NestJS app
             sudo docker run -d \
@@ -100,15 +113,15 @@ jobs:
               --network nestjs-net \
               --restart unless-stopped \
               -e PORT=8888 \
-              -e DATABASE_URL="mysql://nestuser:nestpass@nestjs_db:3306/nestjs" \
-              -e JWT_SECRET="${{ secrets.JWT_SECRET }}" \
+              -e DATABASE_URL="mysql://${{ secrets.DB_USER }}:${{ secrets.DB_PASSWORD }}@nestjs_db:3306/${{ secrets.DB_NAME }}" \
+              -e JWT_SECRET=${{ secrets.JWT_SECRET }} \
               -e JWT_EXPIRATION=3600s \
               -p 8888:8888 \
               ghcr.io/${IMAGE_NAME}:latest
 
             sudo docker image prune -f
 
-            sleep 5
+            sleep 15
 
             echo "=== Running containers ==="
             sudo docker ps --format "table {{.Names}}\t{{.Image}}\t{{.Status}}\t{{.Ports}}"
